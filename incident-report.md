@@ -1,4 +1,4 @@
-**Problem 1 report: Application fix**
+# Problem 1 report: Application fix
 
 1.  # Summary
 
@@ -66,7 +66,7 @@ A Flask-based SRE test application experienced slow response times on the root (
 
 #
 
-**Problem-2: DDockerfile Build Failure & Application Runtime Issues**
+# Problem-2: DDockerfile Build Failure & Application Runtime Issues
 
 1. # Summary
 
