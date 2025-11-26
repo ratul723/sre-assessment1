@@ -3,3 +3,87 @@
 2025-02-11 11:20:17 [ERROR] Readiness probe failed (HTTP 500)
 2025-02-11 11:20:18 [WARNING] High response latency detected: 7000ms
 
+----------------------------
+In my own words,
+
+***1. What caused the readiness probe failures?
+
+The readiness probe failed because the container was exposing and running the application on port 8080, but the Kubernetes configuration was checking the /healthz endpoint on port 80.
+This mismatch caused Kubernetes to assume the application was not ready, even though it was running correctly.
+
+# Additionally:
+
+- The /healthz endpoint originally returned HTTP 500 instead of 200, causing probe failures.
+- The app startup delay (3–8 seconds) also caused probes to fail before the app became ready.
+
+------------------------------------------------
+
+***2. Why is the service slow?
+
+The service was slow because the home ("/") endpoint intentionally introduced a random sleep delay:
+
+`time.sleep(random.randint(3, 8))`
+
+This meant every request took 3–8 seconds to respond, making the app appear slow or unresponsive from Kubernetes or a browser.
+
+------------------------------------------------
+3. What is the probable root cause?
+
+The overall root cause combines three misconfigurations and one code issue:
+
+A. Code issue
+- The random sleep delay caused the application to feel slow and made probes more likely to fail.
+
+B. Port mismatch
+- The application listened on 8080, but Kubernetes expected it on 80.
+
+C. Readiness probe misconfiguration
+- Probe sent requests to the wrong port.
+- Probe path /healthz returned HTTP 500 in the original code.
+
+D. Inefficient Dockerfile
+
+- Incorrect file copying caused inconsistent builds.
+- Missing best practices resulted in slow startup and deployment failures.
+
+All these combined to cause:
+- readiness failures
+- slow service response
+- application not routing properly
+
+------------------------------------------------
+
+4. What permanent fix would resolve it?
+A. Fix the application code
+
+✔ Remove artificial sleep delay or reduce it
+✔ Change /healthz to return 200 OK
+
+B. Fix the readiness probe
+Ensure probe matches the app's actual port:
+****
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+***
+C. Fix the Kubernetes Service
+
+Match targetPort with container port:
+***
+ports:
+- port: 80
+  targetPort: 8080
+***
+D. Fix the Dockerfile (permanent improvement)
+
+- Copy requirements.txt first
+- Optimize layers
+- Use correct working directory
+- Install dependencies cleanly
+
+E. Add proper health checks
+
+Add both readiness and liveness probes so:
+- readiness → controls traffic
+- liveness → restarts crashed/hung containers
