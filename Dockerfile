@@ -4,12 +4,12 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install all the dependencies  
-COPY app/requirements.txt .
+COPY app/requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code here
-COPY app/ .
+COPY app/ /app/
 
 # Match Flask port 
 EXPOSE 8080
