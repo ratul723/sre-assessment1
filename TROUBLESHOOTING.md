@@ -1,4 +1,4 @@
-**1. # Slow home endpoint & wrong /healthz status**
+1. # Slow home endpoint & wrong /healthz status
 
 # Steps I followed \*\*\*
 
@@ -33,7 +33,7 @@ Changed: `return jsonify({"status":"ok"}), 500 → return jsonify({"status":"ok"
 
 ----------------------------
 
-**# 2 Dockerfile Issue -- Flask Not Installed**
+# 2 Dockerfile Issue -- Flask Not Installed
 
 ### Step-by-Step Process Followed
 
@@ -67,7 +67,7 @@ docker exec -it <container_id> pip list
 
 -------------------------
 
-**# 3. Kubernetes Issue -- Readiness Probe Failures & Service Slowness**
+# 3. Kubernetes Issue -- Readiness Probe Failures & Service Slowness
 
 ### Step-by-Step Process Followed
 
@@ -105,7 +105,7 @@ kubectl apply -f deployment.yaml
     production stability.
 
 
-**# 4. Debug logs.txt**
+# 4. Debug logs.txt
 
 ***1. What caused the readiness probe failures?
 
