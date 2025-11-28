@@ -156,7 +156,6 @@ All these combined to cause:
 
 4. What permanent fix would resolve it?
 A. Fix the application code
-
 ✔ Remove artificial sleep delay or reduce it
 ✔ Change /healthz to return 200 OK
 
